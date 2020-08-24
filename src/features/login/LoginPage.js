@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Grid, Button, Box, Input, TextField } from "@material-ui/core";
+import {
+  Grid,
+  Button,
+  Box,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import "./LoginPage.css";
 
@@ -11,12 +19,12 @@ export const LoginPage = () => {
 
   let leftBox = (
     <Box className="leftBox">
-      <Grid container direction="column">
-        <Grid item>
-          <h1>VVayfarer</h1>
+      <Grid container direction="column" spacing={2}>
+        <Grid item className="siteName">
+          VVayfarer
         </Grid>
-        <Grid item>
-          <h2>Welcome on my tourist social networking site.</h2>
+        <Grid item className="siteDescription">
+          Welcome on my tourist social networking site.
         </Grid>
       </Grid>
     </Box>
@@ -25,16 +33,41 @@ export const LoginPage = () => {
   let rightBox = (
     <Box className="rightBox">
       <Grid container direction="column" spacing={3}>
-        <Grid item>Let's go on a trip!</Grid>
-        <LoginForm />
+        <Grid item>
+          <LoginForm />
+        </Grid>
         <Grid item>Don't have account?</Grid>
         <Grid item>
-          <Button variant="outlined" color="primary">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => signUpButtonClicked(true)}
+          >
             Sign up
           </Button>
         </Grid>
       </Grid>
     </Box>
+  );
+
+  let registerDialog = (
+    <Dialog open={signUpButtonState} onClose={() => signUpButtonClicked(false)}>
+      <DialogTitle id="form-dialog-title" className="dialogTitle">
+        Create account
+      </DialogTitle>
+      <DialogContent>
+        <RegisterForm />
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={() => signUpButtonClicked(false)}
+          color="primary"
+          variant="outlined"
+        >
+          Sign up
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 
   return (
@@ -43,6 +76,7 @@ export const LoginPage = () => {
         {leftBox}
         {rightBox}
       </Grid>
+      {registerDialog}
     </React.Fragment>
   );
 };

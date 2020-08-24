@@ -11,7 +11,6 @@ function App() {
     <Router>
       <Route exact path="/" component={LoginPage} />
       <Route exact path="/posts" component={PostsList} />
-      <Route exact path="/register" component={RegisterForm} />
     </Router>
   );
 }
