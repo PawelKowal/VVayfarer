@@ -1,31 +1,18 @@
-.container {
-  display: flex;
-  left: 50%;
-  top: 50%;
-}
-
 .siteName {
-  color: rgb(255, 229, 226);
+  color: rgb(240, 243, 221);
   font-weight: 400;
-  font-size: 48px;
-}
-
-.siteDescription {
-  color: rgb(255, 229, 226);
-  font-weight: 400;
-  font-size: 30px;
+  font-size: 6vw;
 }
 
 .leftBox {
   display: flex;
-  align-items: center;
-  /*min-height: 100vh;*/
+  align-items: end;
   width: 50%;
   text-align: center;
-  /*background-color: rgb(96, 250, 49);*/
-  background-image: url("background6.jpg");
+  background-image: url("background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  padding-bottom: 10%;
 }
 
 .rightBox {
@@ -39,4 +26,8 @@
 .loginContainer {
   direction: column;
   padding-top: 20px;
+}
+
+.dialogStyle {
+  min-width: 50%;
 }

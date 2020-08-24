@@ -23,13 +23,10 @@ export const LoginPage = () => {
         <Grid item className="siteName">
           VVayfarer
         </Grid>
-        <Grid item className="siteDescription">
-          Welcome on my tourist social networking site.
-        </Grid>
       </Grid>
     </Box>
   );
-
+  /**/
   let rightBox = (
     <Box className="rightBox">
       <Grid container direction="column" spacing={3}>
@@ -46,6 +43,15 @@ export const LoginPage = () => {
             Sign up
           </Button>
         </Grid>
+        <Grid item>
+          <ul>
+            VVayfarer is a place where you can:
+            <li>share photos from interesting places you have visited</li>
+            <li>find destination for your future excursions</li>
+            <li>meet new people</li>
+            <li>chat with friends</li>
+          </ul>
+        </Grid>
       </Grid>
     </Box>
   );
@@ -55,7 +61,7 @@ export const LoginPage = () => {
       <DialogTitle id="form-dialog-title" className="dialogTitle">
         Create account
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className="dialogStyle">
         <RegisterForm />
       </DialogContent>
       <DialogActions>

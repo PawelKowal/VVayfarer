@@ -9,8 +9,8 @@ import { RegisterForm } from "./features/login/RegisterForm.js";
 function App() {
   return (
     <Router>
-      <Route exact path="/" component={LoginPage} />
-      <Route exact path="/posts" component={PostsList} />
+      <Route exact path="/VVayfarer" component={LoginPage} />
+      <Route exact path="/VVayfarer/posts" component={PostsList} />
     </Router>
   );
 }
