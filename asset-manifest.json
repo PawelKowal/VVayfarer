@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/VVayfarer/static/css/main.7a9d5dd2.chunk.css",
-    "main.js": "/VVayfarer/static/js/main.8f018d9f.chunk.js",
-    "main.js.map": "/VVayfarer/static/js/main.8f018d9f.chunk.js.map",
+    "main.js": "/VVayfarer/static/js/main.ba976b19.chunk.js",
+    "main.js.map": "/VVayfarer/static/js/main.ba976b19.chunk.js.map",
     "runtime-main.js": "/VVayfarer/static/js/runtime-main.e3091829.js",
     "runtime-main.js.map": "/VVayfarer/static/js/runtime-main.e3091829.js.map",
     "static/js/2.e39a4445.chunk.js": "/VVayfarer/static/js/2.e39a4445.chunk.js",
     "static/js/2.e39a4445.chunk.js.map": "/VVayfarer/static/js/2.e39a4445.chunk.js.map",
     "index.html": "/VVayfarer/index.html",
-    "precache-manifest.5e3255d051208196f431cc9e1bbbaab4.js": "/VVayfarer/precache-manifest.5e3255d051208196f431cc9e1bbbaab4.js",
+    "precache-manifest.39de05bdcf2073fcaa96b83c25925f44.js": "/VVayfarer/precache-manifest.39de05bdcf2073fcaa96b83c25925f44.js",
     "service-worker.js": "/VVayfarer/service-worker.js",
     "static/css/main.7a9d5dd2.chunk.css.map": "/VVayfarer/static/css/main.7a9d5dd2.chunk.css.map",
     "static/js/2.e39a4445.chunk.js.LICENSE.txt": "/VVayfarer/static/js/2.e39a4445.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.e3091829.js",
     "static/js/2.e39a4445.chunk.js",
     "static/css/main.7a9d5dd2.chunk.css",
-    "static/js/main.8f018d9f.chunk.js"
+    "static/js/main.ba976b19.chunk.js"
   ]
 }

@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f73d01dde6cbad8e5ed86ddc34725fda",
+    "revision": "cfb8ac084370a0865d4e040298869186",
     "url": "/VVayfarer/index.html"
   },
   {
-    "revision": "728a4548f3a07212c0a5",
+    "revision": "2e06fb2aeed1b210e535",
     "url": "/VVayfarer/static/css/main.7a9d5dd2.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/VVayfarer/static/js/2.e39a4445.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "728a4548f3a07212c0a5",
-    "url": "/VVayfarer/static/js/main.8f018d9f.chunk.js"
+    "revision": "2e06fb2aeed1b210e535",
+    "url": "/VVayfarer/static/js/main.ba976b19.chunk.js"
   },
   {
     "revision": "b1933fcd9c69d8f37dcf",
