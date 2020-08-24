@@ -2,7 +2,7 @@
   "name": "vvayfarer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pawelkowal.github.io/VVayfarer/",
+  "homepage": "https://pawelkowal.github.io/VVayfarer",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
