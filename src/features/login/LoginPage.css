@@ -6,7 +6,7 @@
 
 .leftBox {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   width: 50%;
   text-align: center;
   background-image: url("background.jpg");

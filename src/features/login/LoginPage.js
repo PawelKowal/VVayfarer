@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Button,
@@ -10,12 +10,20 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import "./LoginPage.css";
+import { useSelector } from "react-redux";
 
 import { LoginForm } from "./LoginForm.js";
 import { RegisterForm } from "./RegisterForm.js";
 
 export const LoginPage = () => {
-  const [signUpButtonState, signUpButtonClicked] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const isValid = useSelector((state) => state.register.isValid);
+
+  useEffect(() => {
+    if (isValid) {
+      setDialogOpen(false);
+    }
+  });
 
   let leftBox = (
     <Box className="leftBox">
@@ -26,19 +34,23 @@ export const LoginPage = () => {
       </Grid>
     </Box>
   );
-  /**/
+
   let rightBox = (
     <Box className="rightBox">
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <LoginForm />
         </Grid>
-        <Grid item>Don't have account?</Grid>
+        <Grid item>
+          <div>Don't have account?</div>
+          <div>You can use test account: 'test@mail.com'/'Password1.'</div>
+          <div>Or:</div>
+        </Grid>
         <Grid item>
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => signUpButtonClicked(true)}
+            onClick={() => setDialogOpen(true)}
           >
             Sign up
           </Button>
@@ -57,22 +69,13 @@ export const LoginPage = () => {
   );
 
   let registerDialog = (
-    <Dialog open={signUpButtonState} onClose={() => signUpButtonClicked(false)}>
+    <Dialog open={dialogOpen}>
       <DialogTitle id="form-dialog-title" className="dialogTitle">
         Create account
       </DialogTitle>
       <DialogContent className="dialogStyle">
         <RegisterForm />
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => signUpButtonClicked(false)}
-          color="primary"
-          variant="outlined"
-        >
-          Sign up
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 

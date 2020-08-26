@@ -5,6 +5,13 @@ import App from "./App";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
+import { useDispatch } from "react-redux";
+import { authenticateTheUser } from "./features/login/loginSlice.js";
+
+const token = localStorage.getItem("token");
+if (token) {
+  store.dispatch(authenticateTheUser());
+}
 
 ReactDOM.render(
   <React.Fragment>
