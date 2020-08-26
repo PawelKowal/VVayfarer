@@ -1,42 +1,52 @@
 import React from "react";
 
-let lastId = 2;
-
-let users = [
-  {
-    userId: 1,
-    name: "Frodo Baggins",
-    email: "test@mail.com",
-    password: "Password1.",
-  },
-  {
-    userId: 2,
-    name: "Samwise Gamgee",
-    email: "test2@mail.com",
-    password: "Password2.",
-  },
-];
-
-export const loginRequest = (email, password) => {
-  let status = "";
-  let userId_ = 0;
-  users.map((x) => {
-    if (x["email"] === email && x["password"] === password) {
-      status = "ok";
-      userId_ = x["userId"];
-    }
-  });
-  return status === "ok"
-    ? { token: status, userId: userId_ }
-    : { token: "invalid", userId: 0 };
+export const initUsers = () => {
+  let users = localStorage.getItem("users");
+  if (!users) {
+    users = {
+      lastId: 2,
+      ids: [1, 2],
+      entities: {
+        1: {
+          name: "Frodo Baggins",
+          email: "test@mail.com",
+          password: "Password1.",
+        },
+        2: {
+          name: "Samwise Gamgee",
+          email: "test2@mail.com",
+          password: "Password2.",
+        },
+      },
+    };
+    users = JSON.stringify(users);
+    localStorage.setItem("users", users);
+  }
 };
 
-export const registrationRequest = (name_, email_, password_) => {
-  lastId = ++lastId;
-  users.push({
-    userId: lastId,
-    name: name_,
-    email: email_,
-    password: password_,
+export const loginRequest = (email, password) => {
+  const users = JSON.parse(localStorage.getItem("users"));
+  let token_ = "invalid";
+  let userId_ = 0;
+  users.ids.map((x) => {
+    if (
+      users.entities[x]["email"] === email &&
+      users.entities[x]["password"] === password
+    ) {
+      token_ = "ok";
+      userId_ = x;
+    }
   });
+  return { token: token_, userId: userId_ };
+};
+
+export const registrationRequest = (data) => {
+  const old_users = JSON.parse(localStorage.getItem("users"));
+  let users = old_users;
+  //users.entities = [...old_users.entities];
+  let newId = users.lastId + 1;
+  users.lastId = newId;
+  users.ids.push(newId);
+  users.entities[newId] = data;
+  localStorage.setItem("users", JSON.stringify(users));
 };

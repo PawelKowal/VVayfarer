@@ -7,6 +7,9 @@ import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { useDispatch } from "react-redux";
 import { authenticateTheUser } from "./features/login/loginSlice.js";
+import { initUsers } from "./mockApi/mockUsers";
+
+initUsers();
 
 const token = localStorage.getItem("token");
 if (token) {

@@ -8,7 +8,7 @@ function AppWrapper() {
   let redirectLink = "/VVayfarer/login";
   useEffect(() => {
     if (isLogged) {
-      redirectLink = "/VVayfarer/posts";
+      redirectLink = "/VVayfarer/session";
     }
   });
 

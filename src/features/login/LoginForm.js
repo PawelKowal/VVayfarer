@@ -26,7 +26,7 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isLogged) {
-      history.push("/VVayfarer/posts");
+      history.push("/VVayfarer/session");
     }
   });
 

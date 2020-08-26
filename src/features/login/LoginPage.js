@@ -8,20 +8,22 @@ import {
   DialogActions,
   DialogTitle,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import "./LoginPage.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { LoginForm } from "./LoginForm.js";
 import { RegisterForm } from "./RegisterForm.js";
+import { registrationDone, openDialog } from "./registerSlice";
 
 export const LoginPage = () => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [attentionDialogOpen, setAttentionDialogOpen] = useState(true);
+  const dialogOpen = useSelector((state) => state.register.dialogOpen);
   const isValid = useSelector((state) => state.register.isValid);
+  let dispatch = useDispatch();
 
   useEffect(() => {
     if (isValid) {
-      setDialogOpen(false);
+      dispatch(registrationDone());
     }
   });
 
@@ -50,7 +52,7 @@ export const LoginPage = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => setDialogOpen(true)}
+            onClick={() => dispatch(openDialog(true))}
           >
             Sign up
           </Button>
@@ -79,8 +81,21 @@ export const LoginPage = () => {
     </Dialog>
   );
 
+  let attentionDialog = (
+    <Dialog open={attentionDialogOpen}>
+      <DialogContent>
+        Website is in development phase and data is stored in local storage, so
+        you should not use your real data, fake data is ok.
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setAttentionDialogOpen(false)}>Close</Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <React.Fragment>
+      {attentionDialog}
       <Grid container direction="row">
         {leftBox}
         {rightBox}

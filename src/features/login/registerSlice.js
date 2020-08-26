@@ -4,35 +4,35 @@ import { registrationRequest } from "../../mockApi/mockUsers";
 const registerAdapter = createEntityAdapter();
 
 /*
-  login={
-      ids: [],
-      entities: {
-      },
-      userId: 0,
-      isLogged: false,
-      error: false,
+  register={
+    isValid: false,
   }
    */
 
 const registerSlice = createSlice({
   name: "register",
-  initialState: registerAdapter.getInitialState({
+  initialState: {
     isValid: false,
-  }),
+    dialogOpen: false,
+  },
   reducers: {
-    validateRegistration(state, action) {
-      state.isValid = true;
-    },
     registerRequest(state, action) {
+      state.isValid = true;
       registrationRequest(action.payload);
+    },
+    registrationDone(state, action) {
+      state.isValid = false;
+    },
+    openDialog(state, action) {
+      state.dialogOpen = action.payload;
     },
   },
 });
 
-const registerSelectors = registerAdapter.getSelectors(
-  (state) => state.register
-);
-
-export const { validateRegistration, registerRequest } = registerSlice.actions;
+export const {
+  registrationDone,
+  registerRequest,
+  openDialog,
+} = registerSlice.actions;
 
 export default registerSlice.reducer;

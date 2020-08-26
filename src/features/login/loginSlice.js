@@ -1,13 +1,8 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { loginRequest } from "../../mockApi/mockUsers";
 
-const loginAdapter = createEntityAdapter();
-
 /*
   login={
-      ids: [],
-      entities: {
-      },
       userId: 0,
       isLogged: false,
       error: false,
@@ -16,11 +11,11 @@ const loginAdapter = createEntityAdapter();
 
 const loginSlice = createSlice({
   name: "login",
-  initialState: loginAdapter.getInitialState({
+  initialState: {
     userId: 0,
     isLogged: false,
     error: false,
-  }),
+  },
   reducers: {
     loginAttempt(state, action) {
       const { email, password } = action.payload;
@@ -31,6 +26,7 @@ const loginSlice = createSlice({
         localStorage.setItem("token", token);
       } else {
         state.error = true;
+        state.userId = userId;
       }
     },
     logoutAttempt(state, action) {
@@ -47,7 +43,7 @@ const loginSlice = createSlice({
   },
 });
 
-const loginSelectors = loginAdapter.getSelectors((state) => state.login);
+const { actions, reducers } = loginSlice;
 
 export const {
   loginAttempt,

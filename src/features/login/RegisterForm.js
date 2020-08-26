@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, makeStyles } from "@material-ui/core";
 import Input from "../../components/Input.js";
 import { useDispatch } from "react-redux";
-import { validateRegistration, registerRequest } from "./registerSlice";
+import { registerRequest, openDialog } from "./registerSlice";
+
+/*let theme = createMuiTheme({
+  spacing: 2,
+});*/
 
 const initialValues = {
   name: "",
@@ -11,7 +15,17 @@ const initialValues = {
   repeatedPassword: "",
 };
 
+const useStyles = makeStyles({
+  button: {
+    marginRight: "20px",
+  },
+  container: {
+    alignItems: "center",
+  },
+});
+
 export const RegisterForm = () => {
+  const classes = useStyles();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   let dispatch = useDispatch();
@@ -25,7 +39,7 @@ export const RegisterForm = () => {
     if ("password" in values)
       temp.password = /.{6,}/.test(values.password)
         ? ""
-        : "Password not valid.";
+        : "Password must contain at least 6 characters.";
     if ("repeatedPassword" in values)
       temp.repeatedPassword =
         values.repeatedPassword === values.password
@@ -49,7 +63,6 @@ export const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate(values)) {
-      dispatch(validateRegistration());
       dispatch(
         registerRequest({
           name: values.name,
@@ -57,6 +70,7 @@ export const RegisterForm = () => {
           password: values.password,
         })
       );
+      dispatch(openDialog(false));
       resetForm();
     }
   };
@@ -67,54 +81,67 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Grid container direction="column" spacing={1}>
-          <Grid item>
-            <Input
-              name="name"
-              label="Name"
-              type="text"
-              value={values.name}
-              onChange={handleInputChange}
-              error={errors.name}
-            />
-          </Grid>
-          <Grid item>
-            <Input
-              name="email"
-              label="E-mail"
-              type="text"
-              value={values.email}
-              onChange={handleInputChange}
-              error={errors.email}
-            />
-          </Grid>
-          <Grid item>
-            <Input
-              type="password"
-              name="password"
-              label="Password"
-              value={values.password}
-              onChange={handleInputChange}
-              error={errors.password}
-            />
-          </Grid>
-          <Grid item>
-            <Input
-              type="password"
-              name="repeatedPassword"
-              label="Repeat password"
-              value={values.repeatedPassword}
-              onChange={handleInputChange}
-              error={errors.repeatedPassword}
-            />
-          </Grid>
+    <form onSubmit={handleSubmit}>
+      <Grid
+        container
+        direction="column"
+        spacing={1}
+        className={classes.container}
+      >
+        <Grid item>
+          <Input
+            name="name"
+            label="Name"
+            type="text"
+            value={values.name}
+            onChange={handleInputChange}
+            error={errors.name}
+          />
         </Grid>
-        <Button type="submit" color="primary" variant="outlined">
-          Sign up
-        </Button>
-      </form>
-    </div>
+        <Grid item>
+          <Input
+            name="email"
+            label="E-mail"
+            type="text"
+            value={values.email}
+            onChange={handleInputChange}
+            error={errors.email}
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            type="password"
+            name="password"
+            label="Password"
+            value={values.password}
+            onChange={handleInputChange}
+            error={errors.password}
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            type="password"
+            name="repeatedPassword"
+            label="Repeat password"
+            value={values.repeatedPassword}
+            onChange={handleInputChange}
+            error={errors.repeatedPassword}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            color="primary"
+            variant="outlined"
+            className={classes.button}
+            onClick={() => dispatch(openDialog(false))}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" color="primary" variant="outlined">
+            Sign up
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
