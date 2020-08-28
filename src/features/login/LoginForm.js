@@ -10,7 +10,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./LoginForm.css";
-import { loginAttempt, errorClosed } from "./loginSlice";
+import { loginAttempt, errorClosed } from "../user/userSlice";
 
 const initialValues = {
   email: "",
@@ -19,8 +19,8 @@ const initialValues = {
 
 export const LoginForm = () => {
   const [values, setValues] = useState(initialValues);
-  const isLogged = useSelector((state) => state.login.isLogged);
-  const error = useSelector((state) => state.login.error);
+  const isLogged = useSelector((state) => state.user.isLogged);
+  const error = useSelector((state) => state.user.loginError);
   const dispatch = useDispatch();
   let history = useHistory();
 

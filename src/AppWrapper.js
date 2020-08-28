@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function AppWrapper() {
-  const isLogged = useSelector((state) => state.login.isLogged);
+  const isLogged = useSelector((state) => state.user.isLogged);
   let redirectLink = "/VVayfarer/login";
   useEffect(() => {
     if (isLogged) {

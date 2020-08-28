@@ -1,5 +1,3 @@
-import React from "react";
-
 export const initUsers = () => {
   let users = localStorage.getItem("users");
   if (!users) {
@@ -8,11 +6,13 @@ export const initUsers = () => {
       ids: [1, 2],
       entities: {
         1: {
+          id: 1,
           name: "Frodo Baggins",
           email: "test@mail.com",
           password: "Password1.",
         },
         2: {
+          id: 2,
           name: "Samwise Gamgee",
           email: "test2@mail.com",
           password: "Password2.",
@@ -41,12 +41,22 @@ export const loginRequest = (email, password) => {
 };
 
 export const registrationRequest = (data) => {
-  const old_users = JSON.parse(localStorage.getItem("users"));
-  let users = old_users;
-  //users.entities = [...old_users.entities];
+  let users = JSON.parse(localStorage.getItem("users"));
   let newId = users.lastId + 1;
   users.lastId = newId;
   users.ids.push(newId);
-  users.entities[newId] = data;
+  users.entities[newId] = { id: newId, ...data };
   localStorage.setItem("users", JSON.stringify(users));
+  return newId;
+};
+
+export const getUsersMockData = () => {
+  const users = JSON.parse(localStorage.getItem("users"));
+  const { lastId, ids, entities } = users;
+  const entitiesArr = Object.values(entities);
+  let newEntities = [];
+  entitiesArr.map((x) => {
+    newEntities.push({ id: x.id, name: x.name });
+  });
+  return newEntities;
 };

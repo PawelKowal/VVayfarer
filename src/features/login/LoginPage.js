@@ -9,23 +9,17 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import "./LoginPage.css";
-import { useSelector, useDispatch } from "react-redux";
 
 import { LoginForm } from "./LoginForm.js";
 import { RegisterForm } from "./RegisterForm.js";
-import { registrationDone, openDialog } from "./registerSlice";
 
 export const LoginPage = () => {
   const [attentionDialogOpen, setAttentionDialogOpen] = useState(true);
-  const dialogOpen = useSelector((state) => state.register.dialogOpen);
-  const isValid = useSelector((state) => state.register.isValid);
-  let dispatch = useDispatch();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (isValid) {
-      dispatch(registrationDone());
-    }
-  });
+  let onCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   let leftBox = (
     <Box className="leftBox">
@@ -52,7 +46,7 @@ export const LoginPage = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => dispatch(openDialog(true))}
+            onClick={() => setDialogOpen(true)}
           >
             Sign up
           </Button>
@@ -76,7 +70,7 @@ export const LoginPage = () => {
         Create account
       </DialogTitle>
       <DialogContent className="dialogStyle">
-        <RegisterForm />
+        <RegisterForm onCloseDialog={onCloseDialog} />
       </DialogContent>
     </Dialog>
   );

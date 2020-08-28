@@ -1,50 +1,46 @@
-import {
-  createSlice,
-  createEntityAdapter,
-  createAsyncThunk,
-} from "@reduxjs/toolkit";
-import axios from "../../api/axios";
-
-export const getUser = createAsyncThunk("user/getUser", async (userId) => {
-  const response = await axios.get("/api/users/" + userId);
-  return response.data;
-});
-
-const userAdapter = createEntityAdapter();
+import { createSlice } from "@reduxjs/toolkit";
+import { loginRequest } from "../../mockApi/mockUsers";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: userAdapter.getInitialState({
-    status: "idle",
-    error: null,
-  }),
-  reducers: {
-    userLoaded: userAdapter.setAll,
+  initialState: {
+    userId: 0,
+    isLogged: false,
+    loginError: false,
   },
-  extraReducers: {
-    [getUser.pending]: (state, action) => {
-      state.status = "loading";
-      state.error = null;
-    },
-    [getUser.fulfilled]: (state, action) => {
-      if (state.status === "loading") {
-        userAdapter.upsertOne(state, action);
-        state.status = "succeeded";
+  reducers: {
+    loginAttempt(state, action) {
+      const { email, password } = action.payload;
+      const { token, userId } = loginRequest(email, password);
+      if (token !== "invalid") {
+        state.userId = userId;
+        state.isLogged = true;
+        localStorage.setItem("token", userId);
+      } else {
+        state.loginError = true;
+        state.userId = userId;
       }
     },
-    [getUser.rejected]: (state, action) => {
-      if (state.status === "loading") {
-        state.status = "failed";
-        state.error = action.payload;
-      }
+    logoutAttempt(state, action) {
+      state.userId = 0;
+      state.isLogged = false;
+      localStorage.removeItem("token");
+    },
+    errorClosed(state, action) {
+      state.loginError = false;
+    },
+    authenticateTheUser(state, action) {
+      state.isLogged = true;
+      state.userId = action.payload;
     },
   },
 });
 
-export const { userLoaded } = userSlice.actions;
-
-export const { selectById: selectUserById } = userAdapter.getSelectors(
-  (state) => state.user
-);
+export const {
+  loginAttempt,
+  logoutAttempt,
+  errorClosed,
+  authenticateTheUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

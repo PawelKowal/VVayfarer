@@ -5,16 +5,22 @@ import App from "./App";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { useDispatch } from "react-redux";
-import { authenticateTheUser } from "./features/login/loginSlice.js";
+import { authenticateTheUser } from "./features/user/userSlice.js";
 import { initUsers } from "./mockApi/mockUsers";
+import { initPosts } from "./mockApi/mockPosts";
+import { fetchPosts } from "./features/posts/postsSlice";
+import { fetchUsersData } from "./features/user/usersSlice";
 
 initUsers();
+initPosts();
 
 const token = localStorage.getItem("token");
 if (token) {
-  store.dispatch(authenticateTheUser());
+  store.dispatch(authenticateTheUser(token));
 }
+
+store.dispatch(fetchPosts());
+store.dispatch(fetchUsersData());
 
 ReactDOM.render(
   <React.Fragment>

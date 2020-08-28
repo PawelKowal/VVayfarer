@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { Grid, Button, makeStyles } from "@material-ui/core";
 import Input from "../../components/Input.js";
 import { useDispatch } from "react-redux";
-import { registerRequest, openDialog } from "./registerSlice";
-
-/*let theme = createMuiTheme({
-  spacing: 2,
-});*/
+import { addNewUser } from "../user/usersSlice";
 
 const initialValues = {
   name: "",
@@ -24,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const RegisterForm = () => {
+export const RegisterForm = (props) => {
   const classes = useStyles();
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -49,7 +45,7 @@ export const RegisterForm = () => {
       ...temp,
     });
 
-    return Object.values(temp).every((x) => x == "");
+    return Object.values(temp).every((x) => x === "");
   };
 
   const handleInputChange = (e) => {
@@ -64,13 +60,13 @@ export const RegisterForm = () => {
     e.preventDefault();
     if (validate(values)) {
       dispatch(
-        registerRequest({
+        addNewUser({
           name: values.name,
           email: values.email,
           password: values.password,
         })
       );
-      dispatch(openDialog(false));
+      props.onCloseDialog();
       resetForm();
     }
   };
@@ -133,7 +129,7 @@ export const RegisterForm = () => {
             color="primary"
             variant="outlined"
             className={classes.button}
-            onClick={() => dispatch(openDialog(false))}
+            onClick={() => props.onCloseDialog()}
           >
             Cancel
           </Button>
