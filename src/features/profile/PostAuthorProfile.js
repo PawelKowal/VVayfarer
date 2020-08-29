@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Paper, Button } from "@material-ui/core";
+import { makeStyles, Paper } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { User } from "../user/User";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,16 +14,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const UserProfile = () => {
+export const PostAuthorProfile = (props) => {
   const classes = useStyles();
-  const userId = useSelector((state) => state.user.userId);
+  const { userId } = props.location.state;
   return (
     <div className={classes.root}>
       <Paper>
+        <h1>Post author:</h1>
         <User id={userId} />
-        <Link to={"/VVayfarer/editUser"}>
-          <Button>Edit profile</Button>
-        </Link>
       </Paper>
     </div>
   );

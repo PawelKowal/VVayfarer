@@ -30,3 +30,11 @@ export const getMockPosts = () => {
   });
   return newEntities;
 };
+
+export const updateMockPost = (data) => {
+  const { id, userId } = data;
+  let posts = JSON.parse(localStorage.getItem("posts"));
+  posts.entities[id].reactsAmount++;
+  posts.entities[id].reactsAuthors.push(userId);
+  localStorage.setItem("posts", JSON.stringify(posts));
+};

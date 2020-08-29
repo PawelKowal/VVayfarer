@@ -60,3 +60,10 @@ export const getUsersMockData = () => {
   });
   return newEntities;
 };
+
+export const updateMockUser = (id, profileDescription, image) => {
+  let users = JSON.parse(localStorage.getItem("users"));
+  users.entities[id]["image"] = image;
+  users.entities[id]["profileDescription"] = profileDescription;
+  localStorage.setItem("users", JSON.stringify(users));
+};

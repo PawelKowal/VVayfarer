@@ -11,7 +11,7 @@ export const Posts = () => {
     <Paper>
       <NewPostForm />
       {postIds.map((x) => (
-        <SinglePost id={x} />
+        <SinglePost id={x} key={x} />
       ))}
     </Paper>
   );

@@ -1,5 +1,9 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
-import { registrationRequest, getUsersMockData } from "../../mockApi/mockUsers";
+import {
+  registrationRequest,
+  getUsersMockData,
+  updateMockUser,
+} from "../../mockApi/mockUsers";
 
 const usersAdapter = createEntityAdapter();
 
@@ -16,6 +20,14 @@ const usersSlice = createSlice({
       const usersData = getUsersMockData();
       usersAdapter.addMany(state, usersData);
     },
+    updateUser(state, action) {
+      const { id, profileDescription, image } = action.payload;
+      usersAdapter.updateOne(state, {
+        id,
+        changes: { profileDescription, image },
+      });
+      updateMockUser(id, profileDescription, image);
+    },
   },
 });
 
@@ -23,6 +35,6 @@ export const { selectById: selectUserById } = usersAdapter.getSelectors(
   (state) => state.users
 );
 
-export const { addNewUser, fetchUsersData } = usersSlice.actions;
+export const { addNewUser, fetchUsersData, updateUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

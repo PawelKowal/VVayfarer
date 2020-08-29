@@ -8,11 +8,14 @@ import * as serviceWorker from "./serviceWorker";
 import { authenticateTheUser } from "./features/user/userSlice.js";
 import { initUsers } from "./mockApi/mockUsers";
 import { initPosts } from "./mockApi/mockPosts";
+import { initComments } from "./mockApi/mockComments";
 import { fetchPosts } from "./features/posts/postsSlice";
 import { fetchUsersData } from "./features/user/usersSlice";
+import { fetchComments } from "./features/comments/commentsSlice";
 
 initUsers();
 initPosts();
+initComments();
 
 const token = localStorage.getItem("token");
 if (token) {
@@ -21,6 +24,7 @@ if (token) {
 
 store.dispatch(fetchPosts());
 store.dispatch(fetchUsersData());
+store.dispatch(fetchComments());
 
 ReactDOM.render(
   <React.Fragment>

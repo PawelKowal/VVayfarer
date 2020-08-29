@@ -1,36 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Paper, Grid, Button, makeStyles } from "@material-ui/core";
-import { addPost } from "./postsSlice";
 import Input from "../../components/Input";
 import ImageInput from "../../components/ImageInput";
-
-const initialValues = {
-  postDescription: "",
-  localisation: "",
-};
+import { updateUser, selectUserById } from "./usersSlice";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({});
 
-export const NewPostForm = (props) => {
+export const EditUser = (props) => {
+  const { image_, profileDescription_ } = props;
   const classes = useStyles();
-  const [values, setValues] = useState(initialValues);
-  const [image, setImage] = useState("");
-  const [errors, setErrors] = useState({});
   const userId = useSelector((state) => state.user.userId);
+  const userData = useSelector((state) => selectUserById(state, userId));
+  const [profileDescription, setProfileDescription] = useState(
+    userData.profileDescription
+  );
+  const [image, setImage] = useState(userData.image);
+  const [errors, setErrors] = useState({});
+
   let dispatch = useDispatch();
+  let history = useHistory();
 
-  const validate = (values) => {
+  const validate = () => {
     let temp = { ...errors };
-    if ("postDescription" in values)
-      temp.postDescription = values.postDescription
-        ? ""
-        : "This field is required.";
-    if ("localisation" in values)
-      temp.localisation = values.localisation ? "" : "This field is required.";
-
-    temp.image =
-      "data:image" === image.slice(0, 10) ? "" : "Image is required.";
+    temp.profileDescription = "";
+    if (image) {
+      temp.image =
+        "data:image" === image.slice(0, 10) ? "" : "Wrong file format.";
+    }
 
     setErrors({
       ...temp,
@@ -47,35 +45,30 @@ export const NewPostForm = (props) => {
         };
         reader.readAsDataURL(e.target.files[0]);
       }
-    } else {
-      const { name, value } = e.target;
-      setValues({
-        ...values,
-        [name]: value,
-      });
+    }
+    if (e.target.name === "profileDescription") {
+      setProfileDescription(e.target.value);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate(values)) {
+    if (validate()) {
       dispatch(
-        addPost({
-          authorId: userId,
-          postDate: Date.now(),
-          postDescription: values.postDescription,
-          localisation: values.localisation,
+        updateUser({
+          id: userId,
+          profileDescription: profileDescription,
           image: image,
-          reactsAmount: 0,
-          reactsAuthors: [],
         })
       );
       resetForm();
+      history.push("/VVayfarer/");
     }
   };
 
   const resetForm = () => {
-    setValues(initialValues);
+    setImage("");
+    setProfileDescription("");
     setErrors({});
   };
 
@@ -90,31 +83,20 @@ export const NewPostForm = (props) => {
         >
           <Grid item>
             <Input
-              name="postDescription"
-              label="Description"
+              name="profileDescription"
+              label="Profile description"
               type="text"
-              value={values.postDescription}
+              value={profileDescription}
               onChange={handleInputChange}
-              error={errors.postDescription}
+              error={errors.profileDescription}
               multiline={true}
               rows="4"
-            />
-          </Grid>
-          <Grid item>
-            <Input
-              name="localisation"
-              label="Localisation"
-              type="text"
-              value={values.localisation}
-              onChange={handleInputChange}
-              error={errors.localisation}
             />
           </Grid>
           <Grid item>
             <ImageInput
               name="image"
               label="Image"
-              value={values.image}
               onChange={handleInputChange}
               error={errors.image}
             />
@@ -133,7 +115,7 @@ export const NewPostForm = (props) => {
               Reset
             </Button>
             <Button type="submit" color="primary" variant="outlined">
-              Add post
+              Update profile
             </Button>
           </Grid>
         </Grid>

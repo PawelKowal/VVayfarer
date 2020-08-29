@@ -21,6 +21,8 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import ForumIcon from "@material-ui/icons/Forum";
 import { Posts } from "../posts/Posts";
 import { UserProfile } from "../profile/UserProfile";
+import { EditUser } from "../user/EditUser";
+import { PostAuthorProfile } from "../profile/PostAuthorProfile";
 import { Chat } from "../chat/Chat";
 import { logoutAttempt } from "../user/userSlice.js";
 
@@ -108,15 +110,11 @@ export const SessionSwitch = () => {
       </AppBar>
 
       <Switch>
-        <Route path="/VVayfarer/posts">
-          <Posts />
-        </Route>
-        <Route path="/VVayfarer/chat">
-          <Chat />
-        </Route>
-        <Route path="/VVayfarer/">
-          <UserProfile />
-        </Route>
+        <Route path="/VVayfarer/posts" component={Posts} />
+        <Route path="/VVayfarer/chat" component={Chat} />
+        <Route path="/VVayfarer/user" component={PostAuthorProfile} />
+        <Route path="/VVayfarer/editUser" component={EditUser} />
+        <Route path="/VVayfarer/" component={UserProfile} />
       </Switch>
     </Router>
   );

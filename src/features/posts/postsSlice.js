@@ -1,5 +1,9 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
-import { addToMockPosts, getMockPosts } from "../../mockApi/mockPosts";
+import {
+  addToMockPosts,
+  getMockPosts,
+  updateMockPost,
+} from "../../mockApi/mockPosts";
 
 const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.postDate.localeCompare(b.date),
@@ -11,12 +15,20 @@ const postsSlice = createSlice({
   reducers: {
     addPost(state, action) {
       const postId = addToMockPosts(action.payload);
-      console.log(action.payload);
       postsAdapter.addOne(state, { id: postId, ...action.payload });
     },
     fetchPosts(state, action) {
       const posts = getMockPosts();
       postsAdapter.addMany(state, posts);
+    },
+    postReactionAdded(state, action) {
+      const { id, userId } = action.payload;
+      const existingPost = state.entities[id];
+      if (existingPost) {
+        existingPost.reactsAmount++;
+        existingPost.reactsAuthors.push(userId);
+      }
+      updateMockPost(action.payload);
     },
   },
 });
@@ -24,8 +36,9 @@ const postsSlice = createSlice({
 export const {
   selectById: selectPostById,
   selectIds: selectPostsIds,
+  selectAll: selectAllPosts,
 } = postsAdapter.getSelectors((state) => state.posts);
 
-export const { addPost, fetchPosts } = postsSlice.actions;
+export const { addPost, fetchPosts, postReactionAdded } = postsSlice.actions;
 
 export default postsSlice.reducer;
