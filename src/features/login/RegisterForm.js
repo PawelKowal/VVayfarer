@@ -3,6 +3,7 @@ import { Grid, Button, makeStyles } from "@material-ui/core";
 import Input from "../../components/Input.js";
 import { useDispatch } from "react-redux";
 import { addNewUser } from "../user/usersSlice";
+import { avatar } from "./defaultAvatar";
 
 const initialValues = {
   name: "",
@@ -12,8 +13,24 @@ const initialValues = {
 };
 
 const useStyles = makeStyles({
-  button: {
-    marginRight: "20px",
+  buttonSignUp: {
+    backgroundColor: "#4caf50",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+  buttonCancel: {
+    backgroundColor: "#9e9e9e",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#bdbdbd",
+    },
+  },
+  buttonsContainer: {
+    justifyContent: "center",
   },
   container: {
     alignItems: "center",
@@ -64,6 +81,8 @@ export const RegisterForm = (props) => {
           name: values.name,
           email: values.email,
           password: values.password,
+          image: avatar,
+          profileDescription: "",
         })
       );
       props.onCloseDialog();
@@ -124,16 +143,21 @@ export const RegisterForm = (props) => {
             error={errors.repeatedPassword}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.buttonsContainer}>
           <Button
             color="primary"
-            variant="outlined"
-            className={classes.button}
+            variant="contained"
+            className={classes.buttonCancel}
             onClick={() => props.onCloseDialog()}
           >
             Cancel
           </Button>
-          <Button type="submit" color="primary" variant="outlined">
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            className={classes.buttonSignUp}
+          >
             Sign up
           </Button>
         </Grid>

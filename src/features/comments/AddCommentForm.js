@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Paper, Grid, Button, makeStyles } from "@material-ui/core";
+import { Grid, Button, makeStyles } from "@material-ui/core";
 import { addComment } from "./commentsSlice";
 import Input from "../../components/Input";
 
@@ -8,11 +8,22 @@ const initialValues = {
   content: "",
 };
 
-const useStyles = makeStyles({});
+const useStyles = makeStyles((theme) => ({
+  buttonStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#4caf50",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+  textFieldStyle: {
+    width: "60%",
+  },
+}));
 
 export const AddCommentForm = (props) => {
-  const { postId } = props;
   const classes = useStyles();
+  const { postId } = props;
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const userId = useSelector((state) => state.user.userId);
@@ -44,7 +55,7 @@ export const AddCommentForm = (props) => {
         addComment({
           postId: postId,
           authorId: userId,
-          commentDate: Date.now(),
+          commentDate: new Date().toISOString(),
           content: values.content,
           reactsAmount: 0,
           reactsAuthors: [],
@@ -60,7 +71,7 @@ export const AddCommentForm = (props) => {
   };
 
   return (
-    <Paper elevation={3}>
+    <div>
       <form onSubmit={handleSubmit}>
         <Grid
           container
@@ -78,15 +89,21 @@ export const AddCommentForm = (props) => {
               error={errors.content}
               multiline={true}
               rows="2"
+              className={classes.textFieldStyle}
             />
           </Grid>
           <Grid item>
-            <Button type="submit" color="primary" variant="outlined">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.buttonStyle}
+            >
               Add comment
             </Button>
           </Grid>
         </Grid>
       </form>
-    </Paper>
+    </div>
   );
 };

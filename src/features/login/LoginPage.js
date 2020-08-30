@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Button,
@@ -7,13 +7,59 @@ import {
   DialogContent,
   DialogActions,
   DialogTitle,
+  makeStyles,
 } from "@material-ui/core";
-import "./LoginPage.css";
 
 import { LoginForm } from "./LoginForm.js";
 import { RegisterForm } from "./RegisterForm.js";
+import Image from "./background.jpg";
+
+const useStyles = makeStyles((theme) => ({
+  siteName: {
+    color: "rgb(240, 243, 221)",
+    fontWeight: "400",
+    fontSize: "6vw",
+  },
+
+  leftBox: {
+    display: "flex",
+    alignItems: "flex-end",
+    width: "50%",
+    textAlign: "center",
+    backgroundImage: "url(" + Image + ")",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    paddingBottom: "10%",
+  },
+
+  rightBox: {
+    display: "flex",
+    alignItems: "center",
+    minHeight: "100vh",
+    width: "50%",
+    textAlign: "center",
+  },
+
+  loginContainer: {
+    direction: "column",
+    paddingTop: "20px",
+  },
+
+  dialogStyle: {
+    minWidth: "50%",
+  },
+
+  signUpButtonStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#4caf50",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+}));
 
 export const LoginPage = () => {
+  const classes = useStyles();
   const [attentionDialogOpen, setAttentionDialogOpen] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -22,9 +68,9 @@ export const LoginPage = () => {
   };
 
   let leftBox = (
-    <Box className="leftBox">
+    <Box className={classes.leftBox}>
       <Grid container direction="column" spacing={2}>
-        <Grid item className="siteName">
+        <Grid item className={classes.siteName}>
           VVayfarer
         </Grid>
       </Grid>
@@ -32,7 +78,7 @@ export const LoginPage = () => {
   );
 
   let rightBox = (
-    <Box className="rightBox">
+    <Box className={classes.rightBox}>
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <LoginForm />
@@ -44,9 +90,10 @@ export const LoginPage = () => {
         </Grid>
         <Grid item>
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             onClick={() => setDialogOpen(true)}
+            className={classes.signUpButtonStyle}
           >
             Sign up
           </Button>
@@ -55,9 +102,9 @@ export const LoginPage = () => {
           <ul>
             VVayfarer is a place where you can:
             <li>share photos from interesting places you have visited</li>
+            <li>comment and react to other people photos</li>
             <li>find destination for your future excursions</li>
             <li>meet new people</li>
-            <li>chat with friends</li>
           </ul>
         </Grid>
       </Grid>
@@ -66,10 +113,8 @@ export const LoginPage = () => {
 
   let registerDialog = (
     <Dialog open={dialogOpen}>
-      <DialogTitle id="form-dialog-title" className="dialogTitle">
-        Create account
-      </DialogTitle>
-      <DialogContent className="dialogStyle">
+      <DialogTitle id="form-dialog-title">Create account</DialogTitle>
+      <DialogContent className={classes.dialogStyle}>
         <RegisterForm onCloseDialog={onCloseDialog} />
       </DialogContent>
     </Dialog>
@@ -82,11 +127,15 @@ export const LoginPage = () => {
         you should not use your real data, fake data is ok.
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setAttentionDialogOpen(false)}>Close</Button>
+        <Button
+          onClick={() => setAttentionDialogOpen(false)}
+          variant="contained"
+        >
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );
-
   return (
     <React.Fragment>
       {attentionDialog}

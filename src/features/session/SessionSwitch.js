@@ -19,16 +19,16 @@ import {
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import ForumIcon from "@material-ui/icons/Forum";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Posts } from "../posts/Posts";
 import { UserProfile } from "../profile/UserProfile";
 import { EditUser } from "../user/EditUser";
 import { PostAuthorProfile } from "../profile/PostAuthorProfile";
-import { Chat } from "../chat/Chat";
 import { logoutAttempt } from "../user/userSlice.js";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    backgroundColor: "#5d9f10",
+    backgroundColor: "#4caf50",
   },
   iconsDiv: {
     display: "flex",
@@ -43,12 +43,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
-  logOutButton: {
+  logOutIcon: {
     color: "rgb(240, 255, 255)",
-    border: "2px solid rgb(240, 255, 255)",
-    fontSize: "1.1rem",
-    fontWeight: 700,
-    padding: "3px 10px",
   },
   siteName: {
     fontWeight: 500,
@@ -59,13 +55,19 @@ const useStyles = makeStyles((theme) => ({
 export const SessionSwitch = () => {
   const classes = useStyles();
   const isLogged = useSelector((state) => state.user.isLogged);
-  const [siteName, setSiteName] = useState("Profile");
+  const [siteName, setSiteName] = useState("Welcome");
   const dispatch = useDispatch();
   let history = useHistory();
 
+  useEffect(() => {
+    if (!isLogged) {
+      history.push("/VVayfarer/");
+    }
+  });
+
   let signOutButtonClicked = () => {
     dispatch(logoutAttempt());
-    history.push("/VVayfarer/login");
+    history.push("/VVayfarer/");
   };
   return (
     <Router>
@@ -89,33 +91,27 @@ export const SessionSwitch = () => {
                     <LibraryBooksIcon fontSize="large" />
                   </IconButton>
                 </Link>
-                <Link to="/VVayfarer/chat">
-                  <IconButton onClick={() => setSiteName("Chat")}>
-                    <ForumIcon fontSize="large" />
-                  </IconButton>
-                </Link>
               </div>
             </Grid>
             <Grid item xs={1}>
-              <Button
-                className={classes.logOutButton}
-                variant="outlined"
-                onClick={signOutButtonClicked}
-              >
-                Sign out
-              </Button>
+              <IconButton onClick={signOutButtonClicked}>
+                <ExitToAppIcon
+                  fontSize="large"
+                  className={classes.logOutIcon}
+                />
+              </IconButton>
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-
-      <Switch>
-        <Route path="/VVayfarer/posts" component={Posts} />
-        <Route path="/VVayfarer/chat" component={Chat} />
-        <Route path="/VVayfarer/user" component={PostAuthorProfile} />
-        <Route path="/VVayfarer/editUser" component={EditUser} />
-        <Route path="/VVayfarer/" component={UserProfile} />
-      </Switch>
+      <div className={classes.root}>
+        <Switch>
+          <Route path="/VVayfarer/posts" component={Posts} />
+          <Route path="/VVayfarer/user" component={PostAuthorProfile} />
+          <Route path="/VVayfarer/editUser" component={EditUser} />
+          <Route path="/VVayfarer/profile" component={UserProfile} />
+        </Switch>
+      </div>
     </Router>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Paper, Grid, Button, makeStyles } from "@material-ui/core";
 import { addPost } from "./postsSlice";
@@ -7,10 +7,39 @@ import ImageInput from "../../components/ImageInput";
 
 const initialValues = {
   postDescription: "",
-  localisation: "",
+  location: "",
 };
 
-const useStyles = makeStyles({});
+const useStyles = makeStyles({
+  root: {
+    "& > *": {
+      margin: "0 5% 4px 5%",
+    },
+    marginTop: "8px",
+    marginBottom: "8px",
+  },
+  buttonAddStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#4caf50",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+  buttonResetStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#9e9e9e",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#bdbdbd",
+    },
+  },
+  textFieldStyle: {
+    width: "70%",
+  },
+});
 
 export const NewPostForm = (props) => {
   const classes = useStyles();
@@ -26,8 +55,8 @@ export const NewPostForm = (props) => {
       temp.postDescription = values.postDescription
         ? ""
         : "This field is required.";
-    if ("localisation" in values)
-      temp.localisation = values.localisation ? "" : "This field is required.";
+    if ("location" in values)
+      temp.location = values.location ? "" : "This field is required.";
 
     temp.image =
       "data:image" === image.slice(0, 10) ? "" : "Image is required.";
@@ -62,9 +91,9 @@ export const NewPostForm = (props) => {
       dispatch(
         addPost({
           authorId: userId,
-          postDate: Date.now(),
+          postDate: new Date().toISOString(),
           postDescription: values.postDescription,
-          localisation: values.localisation,
+          location: values.location,
           image: image,
           reactsAmount: 0,
           reactsAuthors: [],
@@ -80,7 +109,7 @@ export const NewPostForm = (props) => {
   };
 
   return (
-    <Paper elevation={3}>
+    <Paper elevation={3} className={classes.root}>
       <form onSubmit={handleSubmit}>
         <Grid
           container
@@ -98,16 +127,18 @@ export const NewPostForm = (props) => {
               error={errors.postDescription}
               multiline={true}
               rows="4"
+              className={classes.textFieldStyle}
             />
           </Grid>
           <Grid item>
             <Input
-              name="localisation"
-              label="Localisation"
+              name="location"
+              label="Location"
               type="text"
-              value={values.localisation}
+              value={values.location}
               onChange={handleInputChange}
-              error={errors.localisation}
+              error={errors.location}
+              className={classes.textFieldStyle}
             />
           </Grid>
           <Grid item>
@@ -120,19 +151,24 @@ export const NewPostForm = (props) => {
             />
           </Grid>
           <Grid item>
-            {image && <img src={image} width="400" height="400" />}
+            {image && <img src={image} width="40%" height="auto" />}
           </Grid>
 
           <Grid item>
             <Button
               color="primary"
-              variant="outlined"
-              className={classes.button}
+              variant="contained"
+              className={classes.buttonResetStyle}
               onClick={resetForm}
             >
               Reset
             </Button>
-            <Button type="submit" color="primary" variant="outlined">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.buttonAddStyle}
+            >
               Add post
             </Button>
           </Grid>

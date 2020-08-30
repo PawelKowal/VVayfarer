@@ -6,7 +6,48 @@ import ImageInput from "../../components/ImageInput";
 import { updateUser, selectUserById } from "./usersSlice";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles({});
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    height: "100%",
+    minHeight: "100vh",
+    backgroundColor: "#e0e0e0",
+  },
+  feedBackgroundStyle: {
+    display: "flex",
+    width: "50vw",
+    "& > *": {
+      margin: "4px 5% 4px 5%",
+    },
+    marginTop: "8px",
+    marginBottom: "8px",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gridContainerStyle: {},
+  buttonUpdateStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#4caf50",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+  buttonResetStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#9e9e9e",
+    marginRight: "10px",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#bdbdbd",
+    },
+  },
+  textFieldStyle: {
+    width: "100%",
+  },
+}));
 
 export const EditUser = (props) => {
   const { image_, profileDescription_ } = props;
@@ -73,53 +114,61 @@ export const EditUser = (props) => {
   };
 
   return (
-    <Paper elevation={3}>
-      <form onSubmit={handleSubmit}>
-        <Grid
-          container
-          direction="column"
-          spacing={1}
-          className={classes.container}
-        >
-          <Grid item>
-            <Input
-              name="profileDescription"
-              label="Profile description"
-              type="text"
-              value={profileDescription}
-              onChange={handleInputChange}
-              error={errors.profileDescription}
-              multiline={true}
-              rows="4"
-            />
-          </Grid>
-          <Grid item>
-            <ImageInput
-              name="image"
-              label="Image"
-              onChange={handleInputChange}
-              error={errors.image}
-            />
-          </Grid>
-          <Grid item>
-            {image && <img src={image} width="400" height="400" />}
-          </Grid>
+    <div className={classes.root}>
+      <Paper elevation={3} className={classes.feedBackgroundStyle}>
+        <form onSubmit={handleSubmit}>
+          <Grid
+            container
+            direction="column"
+            spacing={1}
+            className={classes.gridContainerStyle}
+          >
+            <Grid item>
+              <Input
+                name="profileDescription"
+                label="Profile description"
+                type="text"
+                value={profileDescription}
+                onChange={handleInputChange}
+                error={errors.profileDescription}
+                multiline={true}
+                rows="4"
+                className={classes.textFieldStyle}
+              />
+            </Grid>
+            <Grid item>
+              <ImageInput
+                name="image"
+                label="Image"
+                onChange={handleInputChange}
+                error={errors.image}
+              />
+            </Grid>
+            <Grid item>
+              {image && <img src={image} width="80%" height="auto" />}
+            </Grid>
 
-          <Grid item>
-            <Button
-              color="primary"
-              variant="outlined"
-              className={classes.button}
-              onClick={resetForm}
-            >
-              Reset
-            </Button>
-            <Button type="submit" color="primary" variant="outlined">
-              Update profile
-            </Button>
+            <Grid item>
+              <Button
+                color="primary"
+                variant="contained"
+                className={classes.buttonResetStyle}
+                onClick={resetForm}
+              >
+                Reset
+              </Button>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                className={classes.buttonUpdateStyle}
+              >
+                Update profile
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Paper>
+        </form>
+      </Paper>
+    </div>
   );
 };

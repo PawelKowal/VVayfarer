@@ -6,11 +6,21 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  makeStyles,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import "./LoginForm.css";
 import { loginAttempt, errorClosed } from "../user/userSlice";
+
+const useStyles = makeStyles((theme) => ({
+  buttonStyle: {
+    fontSize: "1.1rem",
+    backgroundColor: "#4caf50",
+    "&:hover": {
+      backgroundColor: "#81c784",
+    },
+  },
+}));
 
 const initialValues = {
   email: "",
@@ -18,6 +28,7 @@ const initialValues = {
 };
 
 export const LoginForm = () => {
+  const classes = useStyles();
   const [values, setValues] = useState(initialValues);
   const isLogged = useSelector((state) => state.user.isLogged);
   const error = useSelector((state) => state.user.loginError);
@@ -26,7 +37,7 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isLogged) {
-      history.push("/VVayfarer/session");
+      history.push("/VVayfarer/wrapper");
     }
   });
 
@@ -69,7 +80,12 @@ export const LoginForm = () => {
             ></TextField>
           </Grid>
           <Grid item>
-            <Button variant="outlined" color="primary" type="submit">
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              className={classes.buttonStyle}
+            >
               Sign in
             </Button>
           </Grid>
@@ -80,11 +96,7 @@ export const LoginForm = () => {
           Invalid email or password.
         </DialogTitle>
         <DialogActions>
-          <Button
-            onClick={() => dispatch(errorClosed())}
-            color="primary"
-            variant="outlined"
-          >
+          <Button onClick={() => dispatch(errorClosed())} variant="contained">
             Close
           </Button>
         </DialogActions>

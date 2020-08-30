@@ -1,21 +1,37 @@
+import { avatar } from "../features/login/defaultAvatar";
+import { pkavatar } from "./pkavatar";
+import { anonavatar } from "./anonavatar";
+
 export const initUsers = () => {
   let users = localStorage.getItem("users");
   if (!users) {
     users = {
-      lastId: 2,
-      ids: [1, 2],
+      lastId: 3,
+      ids: [1, 2, 3],
       entities: {
         1: {
           id: 1,
-          name: "Frodo Baggins",
+          name: "Test User",
           email: "test@mail.com",
           password: "Password1.",
+          image: avatar,
+          profileDescription: "Test description.",
         },
         2: {
           id: 2,
-          name: "Samwise Gamgee",
+          name: "Paweł Kowal",
           email: "test2@mail.com",
           password: "Password2.",
+          image: pkavatar,
+          profileDescription: "I like mountains and sea.",
+        },
+        3: {
+          id: 3,
+          name: "Anon",
+          email: "test3@mail.com",
+          password: "Password3.",
+          image: anonavatar,
+          profileDescription: "I would prefer to remain anonymous.",
         },
       },
     };
@@ -56,7 +72,12 @@ export const getUsersMockData = () => {
   const entitiesArr = Object.values(entities);
   let newEntities = [];
   entitiesArr.map((x) => {
-    newEntities.push({ id: x.id, name: x.name });
+    newEntities.push({
+      id: x.id,
+      name: x.name,
+      image: x.image,
+      profileDescription: x.profileDescription,
+    });
   });
   return newEntities;
 };

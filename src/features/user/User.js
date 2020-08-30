@@ -1,19 +1,42 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { selectUserById } from "./usersSlice";
-import { Paper } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    maxWidth: "40vw",
+    justifyContent: "center",
+    alignItems: "center",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  nameStyle: {
+    fontWeight: "400",
+    fontSize: "2vw",
+  },
+  descriptionStyle: {
+    fontWeight: "400",
+    fontSize: "1.2vw",
+  },
+}));
 
 export const User = (props) => {
+  const classes = useStyles();
   const { id } = props;
   const userData = useSelector((state) => selectUserById(state, id));
+
   return (
-    <Paper elevation={3}>
-      <div>{userData.name}</div>
+    <div className={classes.root}>
       <div>
-        {userData.image && (
-          <img src={userData.image} width="400" height="400" />
-        )}
+        <img src={userData.image} width="100%" height="auto" />
+        <Typography className={classes.descriptionStyle}>
+          {userData.profileDescription}
+        </Typography>
       </div>
-    </Paper>
+      <Typography className={classes.nameStyle}>{userData.name}</Typography>
+    </div>
   );
 };

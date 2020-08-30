@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "@material-ui/core";
+import { Input, Button } from "@material-ui/core";
 
 export default function ImageInput(props) {
   const { name, label, error = null, onChange } = props;
@@ -12,6 +12,8 @@ export default function ImageInput(props) {
       type="file"
       accept="image/*"
       {...(error && { error: true })}
-    />
+    >
+      <Button>click</Button>
+    </Input>
   );
 }

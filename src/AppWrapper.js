@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function AppWrapper() {
   const isLogged = useSelector((state) => state.user.isLogged);
-  let redirectLink = "/VVayfarer/login";
+  let history = useHistory();
   useEffect(() => {
     if (isLogged) {
-      redirectLink = "/VVayfarer/session";
+      history.push("/VVayfarer/session");
+    } else {
+      history.push("/VVayfarer/");
     }
   });
 
-  return <Redirect to={redirectLink} />;
+  return null;
 }
 
 export default AppWrapper;

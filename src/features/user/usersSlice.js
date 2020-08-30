@@ -13,8 +13,19 @@ const usersSlice = createSlice({
   reducers: {
     addNewUser(state, action) {
       const userId = registrationRequest(action.payload);
-      const { name, email, password } = action.payload;
-      usersAdapter.addOne(state, { id: userId, name: name });
+      const {
+        name,
+        email,
+        password,
+        image,
+        profileDescription,
+      } = action.payload;
+      usersAdapter.addOne(state, {
+        id: userId,
+        name: name,
+        image: image,
+        profileDescription: profileDescription,
+      });
     },
     fetchUsersData(state, action) {
       const usersData = getUsersMockData();
