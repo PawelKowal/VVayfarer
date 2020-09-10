@@ -78,11 +78,12 @@ export const RegisterForm = (props) => {
     if (validate(values)) {
       dispatch(
         addNewUser({
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          image: avatar,
-          profileDescription: "",
+          //name: values.name,
+          Email: values.email,
+          Password: values.password,
+          ConfirmPassword: values.password,
+          //image: avatar,
+          //profileDescription: "",
         })
       );
       props.onCloseDialog();

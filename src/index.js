@@ -6,14 +6,12 @@ import store from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { authenticateTheUser } from "./features/user/userSlice.js";
-import { initUsers } from "./mockApi/mockUsers";
 import { initPosts } from "./mockApi/mockPosts";
 import { initComments } from "./mockApi/mockComments";
 import { fetchPosts } from "./features/posts/postsSlice";
-import { fetchUsersData } from "./features/user/usersSlice";
+import { fetchUsers } from "./features/user/usersSlice";
 import { fetchComments } from "./features/comments/commentsSlice";
 
-initUsers();
 initPosts();
 initComments();
 
@@ -23,7 +21,7 @@ if (token) {
 }
 
 store.dispatch(fetchPosts());
-store.dispatch(fetchUsersData());
+/*store.dispatch(fetchUsers());*/
 store.dispatch(fetchComments());
 
 ReactDOM.render(

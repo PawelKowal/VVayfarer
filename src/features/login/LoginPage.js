@@ -5,7 +5,6 @@ import {
   Box,
   Dialog,
   DialogContent,
-  DialogActions,
   DialogTitle,
   makeStyles,
 } from "@material-ui/core";
@@ -120,25 +119,8 @@ export const LoginPage = () => {
     </Dialog>
   );
 
-  let attentionDialog = (
-    <Dialog open={attentionDialogOpen}>
-      <DialogContent>
-        Website is in development phase and data is stored in local storage, so
-        you should not use your real data, fake data is ok.
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={() => setAttentionDialogOpen(false)}
-          variant="contained"
-        >
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
   return (
     <React.Fragment>
-      {attentionDialog}
       <Grid container direction="row">
         {leftBox}
         {rightBox}
