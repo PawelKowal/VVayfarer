@@ -3,9 +3,13 @@ import axios from "../../api/axios";
 
 export const loginAttempt = createAsyncThunk(
   "user/loginAttempt",
-  async (user) => {
-    const response = await axios.post("/api/auth/login", user);
-    return response.data;
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/auth/login", user);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -15,33 +19,22 @@ const userSlice = createSlice({
     userId: 0,
     isLogged: false,
     loginStatus: "idle",
-    loginError_: null,
-    loginError: false,
+    loginError: null,
+    errorDialog: false,
   },
   reducers: {
-    /*loginAttempt(state, action) {
-      const { email, password } = action.payload;
-      const { token, userId } = loginRequest(email, password);
-      if (token !== "invalid") {
-        state.userId = userId;
-        state.isLogged = true;
-        localStorage.setItem("token", userId);
-      } else {
-        state.loginError = true;
-        state.userId = userId;
-      }
-    },*/
     logoutAttempt(state, action) {
       state.userId = 0;
       state.isLogged = false;
       localStorage.removeItem("token");
     },
-    errorClosed(state, action) {
-      state.loginError = false;
-    },
     authenticateTheUser(state, action) {
       state.isLogged = true;
       state.userId = action.payload;
+    },
+    errorDialogOpen(state, action) {
+      state.errorDialog = action.payload;
+      console.log("dispatched");
     },
   },
   extraReducers: {
@@ -61,9 +54,9 @@ const userSlice = createSlice({
     [loginAttempt.rejected]: (state, action) => {
       if (state.loginStatus === "loading") {
         state.loginStatus = "failed";
-        state.loginError_ = action.payload.errors;
-        state.loginError = true;
+        state.loginError = action.payload.message;
         state.userId = 0;
+        state.errorDialog = true;
       }
     },
   },
@@ -71,7 +64,7 @@ const userSlice = createSlice({
 
 export const {
   logoutAttempt,
-  errorClosed,
+  errorDialogOpen,
   authenticateTheUser,
 } = userSlice.actions;
 

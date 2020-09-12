@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAttempt, errorClosed } from "../user/userSlice";
+import { loginAttempt, errorDialogOpen } from "../user/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   buttonStyle: {
@@ -31,6 +31,7 @@ export const LoginForm = () => {
   const classes = useStyles();
   const [values, setValues] = useState(initialValues);
   const isLogged = useSelector((state) => state.user.isLogged);
+  const errorDialog = useSelector((state) => state.user.errorDialog);
   const error = useSelector((state) => state.user.loginError);
   const dispatch = useDispatch();
   let history = useHistory();
@@ -91,12 +92,15 @@ export const LoginForm = () => {
           </Grid>
         </Grid>
       </form>
-      <Dialog open={error} onClose={() => dispatch(errorClosed())}>
+      <Dialog open={errorDialog}>
         <DialogTitle id="form-dialog-title" className="dialogTitle">
-          Invalid email or password.
+          {error}
         </DialogTitle>
         <DialogActions>
-          <Button onClick={() => dispatch(errorClosed())} variant="contained">
+          <Button
+            onClick={() => dispatch(errorDialogOpen(false))}
+            variant="contained"
+          >
             Close
           </Button>
         </DialogActions>

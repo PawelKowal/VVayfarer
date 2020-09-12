@@ -6,23 +6,30 @@ import {
 import { updateMockUser } from "../../mockApi/mockUsers";
 import axios from "../../api/axios";
 
-/*export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
-  const response = await axios.get("/api/users/");
-  return response.data;
-});*/
-
-export const addNewUser = createAsyncThunk("user/addNewUser", async (user) => {
-  const response = await axios.post("/api/auth/register", user);
+export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
+  const response = await axios.get("/api/user/");
   return response.data;
 });
+
+export const addNewUser = createAsyncThunk(
+  "user/addNewUser",
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/auth/register", user);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
 const usersAdapter = createEntityAdapter();
 
 const usersSlice = createSlice({
   name: "users",
   initialState: usersAdapter.getInitialState({
-    /*fetchUsersStatus: "idle",
-    fetchUsersError: null,*/
+    fetchUsersStatus: "idle",
+    fetchUsersError: null,
     addNewUserStatus: "idle",
     addNewUserError: null,
   }),
@@ -37,7 +44,7 @@ const usersSlice = createSlice({
     },
   },
   extraReducers: {
-    /*[fetchUsers.pending]: (state, action) => {
+    [fetchUsers.pending]: (state, action) => {
       state.fetchUsersStatus = "loading";
       state.fetchUsersError = null;
     },
@@ -52,7 +59,7 @@ const usersSlice = createSlice({
         state.fetchUsersStatus = "failed";
         state.fetchUsersError = action.payload;
       }
-    },*/
+    },
     [addNewUser.pending]: (state, action) => {
       state.addNewUserStatus = "loading";
       state.addNewUserError = null;
