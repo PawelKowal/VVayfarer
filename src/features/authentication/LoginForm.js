@@ -10,7 +10,12 @@ import {
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAttempt, errorDialogOpen } from "../user/userSlice";
+import {
+  loginAttempt,
+  errorDialogOpen,
+  fetchLoggedUser,
+} from "../user/usersSlice";
+import { updateAuthorizationHeader } from "../../api/axios";
 
 const useStyles = makeStyles((theme) => ({
   buttonStyle: {
@@ -30,17 +35,19 @@ const initialValues = {
 export const LoginForm = () => {
   const classes = useStyles();
   const [values, setValues] = useState(initialValues);
-  const isLogged = useSelector((state) => state.user.isLogged);
-  const errorDialog = useSelector((state) => state.user.errorDialog);
-  const error = useSelector((state) => state.user.loginError);
+  const loginStatus = useSelector((state) => state.users.loginStatus);
+  const errorDialog = useSelector((state) => state.users.errorDialog);
+  const error = useSelector((state) => state.users.loginError);
   const dispatch = useDispatch();
   let history = useHistory();
 
   useEffect(() => {
-    if (isLogged) {
-      history.push("/VVayfarer/wrapper");
+    if (loginStatus === "succeeded") {
+      updateAuthorizationHeader();
+      dispatch(fetchLoggedUser());
+      history.push("/VVayfarer/session");
     }
-  });
+  }, [loginStatus]);
 
   let handleChange = (e) => {
     const { name, value } = e.target;

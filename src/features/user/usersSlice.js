@@ -35,17 +35,55 @@ export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
   );
 });
 
+export const loginAttempt = createAsyncThunk(
+  "users/loginAttempt",
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/auth/login", user);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchLoggedUser = createAsyncThunk(
+  "users/fetchLoggedUser",
+  async () => {
+    const response = await axios.get("/api/user");
+    return response.data;
+  }
+);
+
 const usersAdapter = createEntityAdapter();
 
 const usersSlice = createSlice({
   name: "users",
   initialState: usersAdapter.getInitialState({
+    userId: 0,
+    loginStatus: "idle",
+    loginError: null,
+    fetchLoggedUserStatus: "idle",
+    fetchLoggedUserError: null,
+    errorDialog: false,
     fetchUsersStatus: "idle",
     fetchUsersError: null,
     addNewUserStatus: "idle",
     addNewUserErrors: null,
   }),
   reducers: {
+    logoutAttempt(state, action) {
+      state.userId = 0;
+      state.userName = "";
+      state.image = "";
+      state.profileDescription = "";
+      localStorage.removeItem("token");
+      state.loginStatus = "idle";
+      state.fetchLoggedUserStatus = "idle";
+    },
+    errorDialogOpen(state, action) {
+      state.errorDialog = action.payload;
+    },
     resetAddNewUserErrors(state, action) {
       state.addNewUserErrors = null;
     },
@@ -89,10 +127,6 @@ const usersSlice = createSlice({
     },
     [updateUser.fulfilled]: (state, action) => {
       if (state.updateUserStatus === "loading") {
-        /*usersAdapter.updateOne(state, {
-          id,
-          changes: { profileDescription, image },
-        });*/
         state.updateUserStatus = "succeeded";
       }
     },
@@ -102,6 +136,47 @@ const usersSlice = createSlice({
         state.updateUserErrors = action.payload;
       }
     },
+    [loginAttempt.pending]: (state, action) => {
+      state.loginStatus = "loading";
+      state.loginError_ = null;
+    },
+    [loginAttempt.fulfilled]: (state, action) => {
+      if (state.loginStatus === "loading") {
+        state.loginStatus = "succeeded";
+        localStorage.setItem("token", action.payload.message);
+      }
+    },
+    [loginAttempt.rejected]: (state, action) => {
+      if (state.loginStatus === "loading") {
+        state.loginStatus = "failed";
+        state.loginError = action.payload.message;
+        state.userId = 0;
+        state.errorDialog = true;
+      }
+    },
+    [fetchLoggedUser.pending]: (state, action) => {
+      state.fetchLoggedUserStatus = "loading";
+      state.fetchLoggedUserError_ = null;
+    },
+    [fetchLoggedUser.fulfilled]: (state, action) => {
+      if (state.fetchLoggedUserStatus === "loading") {
+        state.fetchLoggedUserStatus = "succeeded";
+        state.loginStatus = "succeeded";
+        state.userId = action.payload.id;
+        usersAdapter.addOne(state, action.payload);
+      }
+    },
+    [fetchLoggedUser.rejected]: (state, action) => {
+      if (state.fetchLoggedUserStatus === "loading") {
+        state.fetchLoggedUserStatus = "failed";
+        state.loginStatus = "failed";
+        state.fetchLoggedUserError = action.payload;
+        state.userId = 0;
+        state.userName = "";
+        state.image = "";
+        state.profileDescription = "";
+      }
+    },
   },
 });
 
@@ -109,6 +184,6 @@ export const { selectById: selectUserById } = usersAdapter.getSelectors(
   (state) => state.users
 );
 
-export const { resetAddNewUserErrors } = usersSlice.actions;
+export const { resetAddNewUserErrors, logoutAttempt, errorDialogOpen } = usersSlice.actions;
 
 export default usersSlice.reducer;

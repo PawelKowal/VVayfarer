@@ -52,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
 export const EditUser = (props) => {
   const { image_, profileDescription_ } = props;
   const classes = useStyles();
-  const userId = useSelector((state) => state.user.userId);
-  const userData = useSelector((state) => selectUserById(state, userId));
+  const userId = useSelector((state) => state.users.userId);
+  const userData2 = useSelector((state) => selectUserById(state, userId));
+  const [userData, setUserData] = useState(userData2);
   const [profileDescription, setProfileDescription] = useState(
     userData.profileDescription
   );

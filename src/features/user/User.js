@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserById } from "./usersSlice";
 import { makeStyles, Typography } from "@material-ui/core";
@@ -27,16 +27,25 @@ export const User = (props) => {
   const classes = useStyles();
   const { id } = props;
   const userData = useSelector((state) => selectUserById(state, id));
+  const [userView, setUserView] = useState();
+
+  useEffect(() => {
+    if (userData){
+      setUserView(<div className={classes.root}>
+        <div>
+          <img src={userData.image} width="100%" height="auto" />
+          <Typography className={classes.descriptionStyle}>
+            {userData.profileDescription}
+          </Typography>
+        </div>
+        <Typography className={classes.nameStyle}>{userData.userName}</Typography>
+      </div>);
+    }
+  }, [userData]);
 
   return (
-    <div className={classes.root}>
-      <div>
-        <img src={userData.image} width="100%" height="auto" />
-        <Typography className={classes.descriptionStyle}>
-          {userData.profileDescription}
-        </Typography>
-      </div>
-      <Typography className={classes.nameStyle}>{userData.userName}</Typography>
+    <div>
+      {userView}
     </div>
   );
 };

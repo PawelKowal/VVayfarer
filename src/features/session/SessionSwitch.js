@@ -24,7 +24,7 @@ import { Posts } from "../posts/Posts";
 import { UserProfile } from "../profile/UserProfile";
 import { EditUser } from "../user/EditUser";
 import { PostAuthorProfile } from "../profile/PostAuthorProfile";
-import { logoutAttempt, getLoggedUserId } from "../user/userSlice.js";
+import { logoutAttempt } from "../user/usersSlice.js";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -54,24 +54,20 @@ const useStyles = makeStyles((theme) => ({
 
 export const SessionSwitch = () => {
   const classes = useStyles();
-  const isLogged = useSelector((state) => state.user.isLogged);
+  const loginStatus = useSelector((state) => state.users.loginStatus);
   const [siteName, setSiteName] = useState("Welcome");
   const dispatch = useDispatch();
   let history = useHistory();
 
   useEffect(() => {
-    dispatch(getLoggedUserId());
-  });
-
-  useEffect(() => {
-    if (!isLogged) {
-      history.push("/VVayfarer/");
+    if (loginStatus !== "succeeded") {
+      history.push("/VVayfarer/login");
     }
-  }, [isLogged, history]);
+  }, [loginStatus, history]);
 
   let signOutButtonClicked = () => {
     dispatch(logoutAttempt());
-    history.push("/VVayfarer/");
+    history.push("/VVayfarer/login");
   };
   return (
     <Router>
@@ -85,12 +81,12 @@ export const SessionSwitch = () => {
             </Grid>
             <Grid item sm>
               <div className={classes.iconsDiv}>
-                <Link to="/VVayfarer/profile">
+                <Link to="/VVayfarer/session/profile">
                   <IconButton onClick={() => setSiteName("Profile")}>
                     <AccountBoxIcon fontSize="large" />
                   </IconButton>
                 </Link>
-                <Link to="/VVayfarer/posts">
+                <Link to="/VVayfarer/session/posts">
                   <IconButton onClick={() => setSiteName("Posts")}>
                     <LibraryBooksIcon fontSize="large" />
                   </IconButton>
@@ -110,10 +106,10 @@ export const SessionSwitch = () => {
       </AppBar>
       <div className={classes.root}>
         <Switch>
-          <Route path="/VVayfarer/posts" component={Posts} />
-          <Route path="/VVayfarer/user" component={PostAuthorProfile} />
-          <Route path="/VVayfarer/editUser" component={EditUser} />
-          <Route path="/VVayfarer/profile" component={UserProfile} />
+          <Route path="/VVayfarer/session/posts" component={Posts} />
+          <Route path="/VVayfarer/session/user" component={PostAuthorProfile} />
+          <Route path="/VVayfarer/session/editUser" component={EditUser} />
+          <Route path="/VVayfarer/session/profile" component={UserProfile} />
         </Switch>
       </div>
     </Router>

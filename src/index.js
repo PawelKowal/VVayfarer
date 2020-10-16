@@ -5,22 +5,18 @@ import App from "./App";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { initPosts } from "./mockApi/mockPosts";
-import { initComments } from "./mockApi/mockComments";
-import { fetchPosts } from "./features/posts/postsSlice";
-import { fetchUsers } from "./features/user/usersSlice";
-import { fetchComments } from "./features/comments/commentsSlice";
-import axios from "./api/axios";
+import { fetchLoggedUser } from "./features/user/usersSlice";
+import { updateAuthorizationHeader } from "./api/axios";
 
-initPosts();
-initComments();
+//initPosts();
+//initComments();
+//initUsers();
 
-axios.defaults.headers.common["Authorization"] =
-  "Bearer " + localStorage.getItem("token");
+updateAuthorizationHeader();
 
-store.dispatch(fetchPosts());
-store.dispatch(fetchUsers());
-store.dispatch(fetchComments());
+if (localStorage.getItem("token")) {
+  store.dispatch(fetchLoggedUser());
+}
 
 ReactDOM.render(
   <React.Fragment>

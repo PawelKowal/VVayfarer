@@ -4,16 +4,20 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function AppWrapper() {
-  const isLogged = useSelector((state) => state.user.isLogged);
+  const loginStatus = useSelector((state) => state.user.loginStatus);
   let history = useHistory();
-  useEffect(() => {
-    if (isLogged) {
+  /*useEffect(() => {
+    if (loginStatus === "succeeded") {
       history.push("/VVayfarer/session");
     } else {
-      history.push("/VVayfarer/");
+      history.push("/VVayfarer/login");
     }
-  });
-
+  });*/
+  if (loginStatus === "succeeded") {
+    history.push("/VVayfarer/session");
+  } else {
+    history.push("/VVayfarer/login");
+  }
   return null;
 }
 
