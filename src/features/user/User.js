@@ -36,7 +36,7 @@ export const User = (props) => {
           {userData.profileDescription}
         </Typography>
       </div>
-      <Typography className={classes.nameStyle}>{userData.name}</Typography>
+      <Typography className={classes.nameStyle}>{userData.userName}</Typography>
     </div>
   );
 };

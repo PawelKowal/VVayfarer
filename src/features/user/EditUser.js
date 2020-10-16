@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Paper, Grid, Button, makeStyles } from "@material-ui/core";
 import Input from "../../components/Input";
 import ImageInput from "../../components/ImageInput";
-import { updateUser, selectUserById } from "./usersSlice";
+import { updateUser, selectUserById, fetchUsers } from "./usersSlice";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -97,9 +97,11 @@ export const EditUser = (props) => {
     if (validate()) {
       dispatch(
         updateUser({
-          id: userId,
-          profileDescription: profileDescription,
-          image: image,
+          patchData: {
+            ProfileDescription: profileDescription,
+            Image: image,
+          },
+          UserId: userId,
         })
       );
       resetForm();

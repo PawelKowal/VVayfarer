@@ -24,7 +24,7 @@ import { Posts } from "../posts/Posts";
 import { UserProfile } from "../profile/UserProfile";
 import { EditUser } from "../user/EditUser";
 import { PostAuthorProfile } from "../profile/PostAuthorProfile";
-import { logoutAttempt } from "../user/userSlice.js";
+import { logoutAttempt, getLoggedUserId } from "../user/userSlice.js";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -60,10 +60,14 @@ export const SessionSwitch = () => {
   let history = useHistory();
 
   useEffect(() => {
+    dispatch(getLoggedUserId());
+  });
+
+  useEffect(() => {
     if (!isLogged) {
       history.push("/VVayfarer/");
     }
-  });
+  }, [isLogged, history]);
 
   let signOutButtonClicked = () => {
     dispatch(logoutAttempt());

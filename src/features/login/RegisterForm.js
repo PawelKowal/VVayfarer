@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Button, makeStyles } from "@material-ui/core";
 import Input from "../../components/Input.js";
-import { useDispatch } from "react-redux";
-import { addNewUser } from "../user/usersSlice";
-import { avatar } from "./defaultAvatar";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewUser, resetAddNewUserErrors } from "../user/usersSlice";
 
 const initialValues = {
   name: "",
   email: "",
   password: "",
   repeatedPassword: "",
+};
+
+const initialErrors = {
+  nameErrors: [],
+  emailErrors: [],
+  passwordErrors: [],
+  repeatedPasswordErrors: [],
+  otherErrors: [],
+};
+
+const initialErrorsList = {
+  nameErrors: "",
+  emailErrors: "",
+  passwordErrors: "",
+  repeatedPasswordErrors: "",
+  otherErrors: "",
 };
 
 const useStyles = makeStyles({
@@ -35,35 +50,73 @@ const useStyles = makeStyles({
   container: {
     alignItems: "center",
   },
+  errorList: {
+    marginLeft: "0",
+    paddingLeft: "1vw",
+    marginTop: "0",
+    paddingTop: "0",
+    marginBottom: "0",
+    paddingBottom: "0",
+  },
 });
 
 export const RegisterForm = (props) => {
   const classes = useStyles();
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
+  const [errorsKeysArr, setErrorsKeysArr] = useState(initialErrors);
+  const [errorsList, setErrorsList] = useState(initialErrorsList);
+  const registerStatus = useSelector((state) => state.users.addNewUserStatus);
+  const responseErrors = useSelector((state) => state.users.addNewUserErrors);
   let dispatch = useDispatch();
 
-  const validate = (values) => {
-    let temp = { ...errors };
-    if ("name" in values)
-      temp.name = values.name ? "" : "This field is required.";
-    if ("email" in values)
-      temp.email = /.+@.+..+/.test(values.email) ? "" : "Email is not valid.";
-    if ("password" in values)
-      temp.password = /.{6,}/.test(values.password)
-        ? ""
-        : "Password must contain at least 6 characters.";
-    if ("repeatedPassword" in values)
-      temp.repeatedPassword =
-        values.repeatedPassword === values.password
-          ? ""
-          : "Passwords are not the same.";
-    setErrors({
-      ...temp,
-    });
+  function isMatching(regexp) {
+    return (str) => regexp.test(str);
+  }
+  function isNotMatching(regexp) {
+    return (str) => !regexp.test(str);
+  }
 
-    return Object.values(temp).every((x) => x === "");
-  };
+  useEffect(() => {
+    if (registerStatus === "succeeded") {
+      resetForm();
+      props.onCloseDialog();
+    }
+  }, [registerStatus]);
+
+  useEffect(() => {
+    if (responseErrors) {
+      let keys = Object.keys(responseErrors);
+      let errorsKeys = {};
+      errorsKeys["emailErrors"] = keys.filter(isMatching(/email|Email/));
+      errorsKeys["nameErrors"] = keys.filter(isMatching(/name|Name/));
+      errorsKeys["passwordErrors"] = keys.filter(
+        isMatching(/password|Password/)
+      );
+      errorsKeys["repeatedPasswordErrors"] = keys.filter(
+        isMatching(/confirmPassword/)
+      );
+      errorsKeys["otherErrors"] = keys.filter(
+        isNotMatching(/email|Email|name|Name|password|Password|confirmPassword/)
+      );
+      setErrorsKeysArr(errorsKeys);
+    }
+  }, [responseErrors]);
+
+  useEffect(() => {
+    let errors = {};
+    for (const keysArr in errorsKeysArr) {
+      if (errorsKeysArr[keysArr].length > 0) {
+        errors[keysArr] = (
+          <ul className={classes.errorList}>
+            {errorsKeysArr[keysArr].map((x) => {
+              return <li key={x}>{responseErrors[x][0]}</li>;
+            })}
+          </ul>
+        );
+      }
+    }
+    setErrorsList(errors);
+  }, [errorsKeysArr]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,92 +128,98 @@ export const RegisterForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate(values)) {
-      dispatch(
-        addNewUser({
-          UserName: values.name,
-          Email: values.email,
-          Password: values.password,
-          ConfirmPassword: values.password,
-        })
-      );
-      props.onCloseDialog();
-      resetForm();
-    }
+    dispatch(
+      addNewUser({
+        UserName: values.name,
+        Email: values.email,
+        Password: values.password,
+        ConfirmPassword: values.repeatedPassword,
+      })
+    );
   };
 
   const resetForm = () => {
     setValues(initialValues);
-    setErrors({});
+    setErrorsKeysArr(initialErrors);
+    setErrorsList(initialErrorsList);
+    dispatch(resetAddNewUserErrors());
+  };
+
+  const handleCloseButton = () => {
+    resetForm();
+    props.onCloseDialog();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid
-        container
-        direction="column"
-        spacing={1}
-        className={classes.container}
-      >
-        <Grid item>
-          <Input
-            name="name"
-            label="Name"
-            type="text"
-            value={values.name}
-            onChange={handleInputChange}
-            error={errors.name}
-          />
+    <React.Fragment>
+      <form onSubmit={handleSubmit}>
+        <Grid
+          container
+          direction="column"
+          spacing={1}
+          className={classes.container}
+        >
+          <Grid item>
+            <Input
+              name="name"
+              label="Name"
+              type="text"
+              value={values.name}
+              onChange={handleInputChange}
+              error={errorsList["nameErrors"]}
+            />
+          </Grid>
+          <Grid item>
+            <Input
+              name="email"
+              label="E-mail"
+              type="text"
+              value={values.email}
+              onChange={handleInputChange}
+              error={errorsList["emailErrors"]}
+            />
+          </Grid>
+          <Grid item>
+            <Input
+              type="password"
+              name="password"
+              label="Password"
+              value={values.password}
+              onChange={handleInputChange}
+              error={errorsList["passwordErrors"]}
+            />
+          </Grid>
+          <Grid item>
+            <Input
+              type="password"
+              name="repeatedPassword"
+              label="Repeat password"
+              value={values.repeatedPassword}
+              onChange={handleInputChange}
+              error={errorsList["repeatedPasswordErrors"]}
+            />
+          </Grid>
+          <Grid item className={classes.buttonsContainer}>
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.buttonCancel}
+              onClick={handleCloseButton}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.buttonSignUp}
+            >
+              Sign up
+            </Button>
+          </Grid>
+          <Grid item>{errorsList["otherErrors"]}</Grid>
         </Grid>
-        <Grid item>
-          <Input
-            name="email"
-            label="E-mail"
-            type="text"
-            value={values.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-        </Grid>
-        <Grid item>
-          <Input
-            type="password"
-            name="password"
-            label="Password"
-            value={values.password}
-            onChange={handleInputChange}
-            error={errors.password}
-          />
-        </Grid>
-        <Grid item>
-          <Input
-            type="password"
-            name="repeatedPassword"
-            label="Repeat password"
-            value={values.repeatedPassword}
-            onChange={handleInputChange}
-            error={errors.repeatedPassword}
-          />
-        </Grid>
-        <Grid item className={classes.buttonsContainer}>
-          <Button
-            color="primary"
-            variant="contained"
-            className={classes.buttonCancel}
-            onClick={() => props.onCloseDialog()}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            className={classes.buttonSignUp}
-          >
-            Sign up
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </React.Fragment>
   );
 };

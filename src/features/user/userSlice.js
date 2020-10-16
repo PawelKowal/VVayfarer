@@ -13,6 +13,14 @@ export const loginAttempt = createAsyncThunk(
   }
 );
 
+export const getLoggedUserId = createAsyncThunk(
+  "user/getLoggedUserId",
+  async () => {
+    const response = await axios.get("/api/user");
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -20,6 +28,8 @@ const userSlice = createSlice({
     isLogged: false,
     loginStatus: "idle",
     loginError: null,
+    getLoggedUserIdStatus: "idle",
+    getLoggedUserIdError: null,
     errorDialog: false,
   },
   reducers: {
@@ -28,13 +38,8 @@ const userSlice = createSlice({
       state.isLogged = false;
       localStorage.removeItem("token");
     },
-    authenticateTheUser(state, action) {
-      state.isLogged = true;
-      state.userId = action.payload;
-    },
     errorDialogOpen(state, action) {
       state.errorDialog = action.payload;
-      console.log("dispatched");
     },
   },
   extraReducers: {
@@ -44,10 +49,8 @@ const userSlice = createSlice({
     },
     [loginAttempt.fulfilled]: (state, action) => {
       if (state.loginStatus === "loading") {
-        //usersAdapter.addOne(state, action);
         state.loginStatus = "succeeded";
         localStorage.setItem("token", action.payload.message);
-        state.userId = 1;
         state.isLogged = true;
       }
     },
@@ -59,13 +62,28 @@ const userSlice = createSlice({
         state.errorDialog = true;
       }
     },
+    [getLoggedUserId.pending]: (state, action) => {
+      state.getLoggedUserIdStatus = "loading";
+      state.getLoggedUserIdError_ = null;
+    },
+    [getLoggedUserId.fulfilled]: (state, action) => {
+      if (state.getLoggedUserIdStatus === "loading") {
+        state.getLoggedUserIdStatus = "succeeded";
+        state.userId = action.payload.id;
+        state.isLogged = true;
+      }
+    },
+    [getLoggedUserId.rejected]: (state, action) => {
+      if (state.getLoggedUserIdStatus === "loading") {
+        state.getLoggedUserIdStatus = "failed";
+        state.getLoggedUserIdError = action.payload;
+        state.userId = 0;
+        state.isLogged = false;
+      }
+    },
   },
 });
 
-export const {
-  logoutAttempt,
-  errorDialogOpen,
-  authenticateTheUser,
-} = userSlice.actions;
+export const { logoutAttempt, errorDialogOpen } = userSlice.actions;
 
 export default userSlice.reducer;

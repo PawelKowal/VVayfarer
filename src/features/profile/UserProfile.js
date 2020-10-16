@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { makeStyles, Paper, Button, Grid } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { User } from "../user/User";
 import { Link } from "react-router-dom";
+import { fetchUsers } from "./../user/usersSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
 export const UserProfile = () => {
   const classes = useStyles();
   const userId = useSelector((state) => state.user.userId);
+  let dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  });
 
   return (
     <div className={classes.root}>

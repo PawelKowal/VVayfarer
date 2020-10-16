@@ -3,16 +3,16 @@ import {
   createEntityAdapter,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { updateMockUser } from "../../mockApi/mockUsers";
 import axios from "../../api/axios";
+import { createJsonPatchDoc } from "../../api/createJsonPatchDoc";
 
 export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
-  const response = await axios.get("/api/user/");
+  const response = await axios.get("/api/users/");
   return response.data;
 });
 
 export const addNewUser = createAsyncThunk(
-  "user/addNewUser",
+  "users/addNewUser",
   async (user, { rejectWithValue }) => {
     try {
       const response = await axios.post("/api/auth/register", user);
@@ -23,6 +23,18 @@ export const addNewUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
+  const response = await axios.patch(
+    "/api/user",
+    createJsonPatchDoc(data.patchData),
+    {
+      params: {
+        Id: data.UserId,
+      },
+    }
+  );
+});
+
 const usersAdapter = createEntityAdapter();
 
 const usersSlice = createSlice({
@@ -31,16 +43,11 @@ const usersSlice = createSlice({
     fetchUsersStatus: "idle",
     fetchUsersError: null,
     addNewUserStatus: "idle",
-    addNewUserError: null,
+    addNewUserErrors: null,
   }),
   reducers: {
-    updateUser(state, action) {
-      const { id, profileDescription, image } = action.payload;
-      usersAdapter.updateOne(state, {
-        id,
-        changes: { profileDescription, image },
-      });
-      updateMockUser(id, profileDescription, image);
+    resetAddNewUserErrors(state, action) {
+      state.addNewUserErrors = null;
     },
   },
   extraReducers: {
@@ -50,7 +57,7 @@ const usersSlice = createSlice({
     },
     [fetchUsers.fulfilled]: (state, action) => {
       if (state.fetchUsersStatus === "loading") {
-        usersAdapter.addMany(state, action);
+        usersAdapter.setAll(state, action);
         state.fetchUsersStatus = "succeeded";
       }
     },
@@ -62,7 +69,7 @@ const usersSlice = createSlice({
     },
     [addNewUser.pending]: (state, action) => {
       state.addNewUserStatus = "loading";
-      state.addNewUserError = null;
+      state.addNewUserErrors = null;
     },
     [addNewUser.fulfilled]: (state, action) => {
       if (state.addNewUserStatus === "loading") {
@@ -73,7 +80,26 @@ const usersSlice = createSlice({
     [addNewUser.rejected]: (state, action) => {
       if (state.addNewUserStatus === "loading") {
         state.addNewUserStatus = "failed";
-        state.addNewUserError = action.payload.errors;
+        state.addNewUserErrors = action.payload.errors;
+      }
+    },
+    [updateUser.pending]: (state, action) => {
+      state.updateUserStatus = "loading";
+      state.updateUserErrors = null;
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      if (state.updateUserStatus === "loading") {
+        /*usersAdapter.updateOne(state, {
+          id,
+          changes: { profileDescription, image },
+        });*/
+        state.updateUserStatus = "succeeded";
+      }
+    },
+    [updateUser.rejected]: (state, action) => {
+      if (state.updateUserStatus === "loading") {
+        state.updateUserStatus = "failed";
+        state.updateUserErrors = action.payload;
       }
     },
   },
@@ -83,6 +109,6 @@ export const { selectById: selectUserById } = usersAdapter.getSelectors(
   (state) => state.users
 );
 
-export const { updateUser } = usersSlice.actions;
+export const { resetAddNewUserErrors } = usersSlice.actions;
 
 export default usersSlice.reducer;

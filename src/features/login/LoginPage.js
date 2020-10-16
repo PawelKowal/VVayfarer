@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const LoginPage = () => {
   const classes = useStyles();
-  const [attentionDialogOpen, setAttentionDialogOpen] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   let onCloseDialog = () => {
