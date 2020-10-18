@@ -49,24 +49,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EditUser = (props) => {
-  const { image_, profileDescription_ } = props;
+export const EditUser = () => {
   const classes = useStyles();
   const userId = useSelector((state) => state.users.userId);
-  const userData2 = useSelector((state) => selectUserById(state, userId));
-  const [userData, setUserData] = useState(userData2);
-  const [profileDescription, setProfileDescription] = useState(
-    userData.profileDescription
-  );
-  const [image, setImage] = useState(userData.image);
+  const userData = useSelector((state) => selectUserById(state, userId));
+  const [profileDescription, setProfileDescription] = useState();
+  const [image, setImage] = useState();
   const [errors, setErrors] = useState({});
 
   let dispatch = useDispatch();
   let history = useHistory();
 
+  useEffect(() => {
+    if (userData) {
+      setProfileDescription(userData.profileDescription);
+      setImage(userData.image);
+    }
+  }, [userData]);
+
   const validate = () => {
     let temp = { ...errors };
     temp.profileDescription = "";
+    if (!image) {
+      temp.image = "Image is required.";
+    }
     if (image) {
       temp.image =
         "data:image" === image.slice(0, 10) ? "" : "Wrong file format.";
@@ -78,19 +84,18 @@ export const EditUser = (props) => {
     return Object.values(temp).every((x) => x === "");
   };
 
-  const handleInputChange = (e) => {
-    if (e.target.name === "image") {
-      if (e.target.files && e.target.files[0]) {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          setImage(e.target.result);
-        };
-        reader.readAsDataURL(e.target.files[0]);
-      }
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
-    if (e.target.name === "profileDescription") {
-      setProfileDescription(e.target.value);
-    }
+  };
+
+  const handleProfileDescriptionChange = (e) => {
+    setProfileDescription(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -106,13 +111,13 @@ export const EditUser = (props) => {
         })
       );
       resetForm();
-      history.push("/VVayfarer/");
+      history.push("/VVayfarer/session/profile");
     }
   };
 
   const resetForm = () => {
-    setImage("");
-    setProfileDescription("");
+    setImage(userData.image);
+    setProfileDescription(userData.profileDescription);
     setErrors({});
   };
 
@@ -132,7 +137,7 @@ export const EditUser = (props) => {
                 label="Profile description"
                 type="text"
                 value={profileDescription}
-                onChange={handleInputChange}
+                onChange={handleProfileDescriptionChange}
                 error={errors.profileDescription}
                 multiline={true}
                 rows="4"
@@ -143,7 +148,7 @@ export const EditUser = (props) => {
               <ImageInput
                 name="image"
                 label="Image"
-                onChange={handleInputChange}
+                onChange={handleImageChange}
                 error={errors.image}
               />
             </Grid>

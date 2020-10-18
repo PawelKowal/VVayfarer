@@ -70,6 +70,8 @@ const usersSlice = createSlice({
     fetchUsersError: null,
     addNewUserStatus: "idle",
     addNewUserErrors: null,
+    updateUserStatus: "idle",
+    updateUserErrors: null,
   }),
   reducers: {
     logoutAttempt(state, action) {
@@ -86,6 +88,9 @@ const usersSlice = createSlice({
     },
     resetAddNewUserErrors(state, action) {
       state.addNewUserErrors = null;
+    },
+    setLoginStatus(state, action) {
+      state.loginStatus = action.payload; //"succeeded or failed"
     },
   },
   extraReducers: {
@@ -163,7 +168,7 @@ const usersSlice = createSlice({
         state.fetchLoggedUserStatus = "succeeded";
         state.loginStatus = "succeeded";
         state.userId = action.payload.id;
-        usersAdapter.addOne(state, action.payload);
+        usersAdapter.upsertOne(state, action.payload);
       }
     },
     [fetchLoggedUser.rejected]: (state, action) => {
@@ -184,6 +189,11 @@ export const { selectById: selectUserById } = usersAdapter.getSelectors(
   (state) => state.users
 );
 
-export const { resetAddNewUserErrors, logoutAttempt, errorDialogOpen } = usersSlice.actions;
+export const {
+  resetAddNewUserErrors,
+  logoutAttempt,
+  errorDialogOpen,
+  setLoginStatus,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;

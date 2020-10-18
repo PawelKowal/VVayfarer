@@ -5,7 +5,7 @@ import App from "./App";
 import store from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { fetchLoggedUser } from "./features/user/usersSlice";
+import { fetchLoggedUser, setLoginStatus } from "./features/user/usersSlice";
 import { updateAuthorizationHeader } from "./api/axios";
 
 //initPosts();
@@ -15,6 +15,8 @@ import { updateAuthorizationHeader } from "./api/axios";
 updateAuthorizationHeader();
 
 if (localStorage.getItem("token")) {
+  store.dispatch(setLoginStatus("succeeded"));
+  console.log("index fetch");
   store.dispatch(fetchLoggedUser());
 }
 

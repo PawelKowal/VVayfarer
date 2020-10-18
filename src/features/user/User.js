@@ -26,12 +26,10 @@ const useStyles = makeStyles((theme) => ({
 export const User = (props) => {
   const classes = useStyles();
   const { id } = props;
-  const userData = useSelector((state) => selectUserById(state, id));
-  const [userView, setUserView] = useState();
+  const userData = useSelector((state) => selectUserById(state, id))
 
-  useEffect(() => {
-    if (userData){
-      setUserView(<div className={classes.root}>
+  return (
+    <div className={classes.root}>
         <div>
           <img src={userData.image} width="100%" height="auto" />
           <Typography className={classes.descriptionStyle}>
@@ -39,13 +37,6 @@ export const User = (props) => {
           </Typography>
         </div>
         <Typography className={classes.nameStyle}>{userData.userName}</Typography>
-      </div>);
-    }
-  }, [userData]);
-
-  return (
-    <div>
-      {userView}
-    </div>
+      </div>
   );
 };

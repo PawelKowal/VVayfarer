@@ -39,8 +39,14 @@ const useStyles = makeStyles((theme) => ({
 export const UserProfile = () => {
   const classes = useStyles();
   const userId = useSelector((state) => state.users.userId);
+  const updateUserStatus = useSelector((state) => state.users.updateUserStatus);
   let dispatch = useDispatch();
-  dispatch(fetchLoggedUser());
+
+  useEffect(() => {
+    if (updateUserStatus === "succeeded") {
+      dispatch(fetchLoggedUser());
+    }
+  }, [updateUserStatus]);
 
   return (
     <div className={classes.root}>
@@ -50,7 +56,7 @@ export const UserProfile = () => {
           direction="column"
           className={classes.gridContainerStyle}
         >
-          <Grid item><User id={userId}/></Grid>
+          <Grid item>{userId === 0 ? null : <User id={userId} />}</Grid>
           <Grid item className={classes.gridContainerStyle}>
             <Link to={"/VVayfarer/session/editUser"}>
               <Button
