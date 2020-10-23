@@ -16,7 +16,6 @@ updateAuthorizationHeader();
 
 if (localStorage.getItem("token")) {
   store.dispatch(setLoginStatus("succeeded"));
-  console.log("index fetch");
   store.dispatch(fetchLoggedUser());
 }
 

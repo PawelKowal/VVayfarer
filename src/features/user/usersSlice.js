@@ -8,6 +8,7 @@ import { createJsonPatchDoc } from "../../api/createJsonPatchDoc";
 
 export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
   const response = await axios.get("/api/users/");
+
   return response.data;
 });
 
@@ -76,9 +77,6 @@ const usersSlice = createSlice({
   reducers: {
     logoutAttempt(state, action) {
       state.userId = 0;
-      state.userName = "";
-      state.image = "";
-      state.profileDescription = "";
       localStorage.removeItem("token");
       state.loginStatus = "idle";
       state.fetchLoggedUserStatus = "idle";
